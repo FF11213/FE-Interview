@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    账户：<input type="text" id="useript" />
+    <script>
+      var ipt = document.getElementById("useript");
+      ipt.onkeyup = debounce(function (e) {
+        console.log(e);
+      }, 1000);
+      /**
+       * 防抖
+       * @param {function} fn 要防抖的函数
+       * @param {number} delay 延迟(类似于fps一样~)
+       * return 执行函数
+       */
+      function debounce(fn, delay) {
+        //这样子建立了一个闭包,timer始终存在
+        let timer = null;
+        return function () {
+          let context = this,
+            args = arguments;
+
+          console.log(args);
+          if (timer) {
+            clearTimeout(timer); //清除上一次的
+          }
+          timer = setTimeout(function () {
+            //传入的为[30,40,50....这种形式],所以不能单纯fn(args)
+            //不确定参数,加上参数形式为[....],就使用fn.apply(this.args);
+            fn.apply(this, args);
+            timer = null;
+          }, delay);
+        };
+      }
+    </script>
+  </body>
+</html>
