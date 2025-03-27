@@ -129,16 +129,16 @@ const patchKeyedChildren = (oldChildren, newChildren, container, parentAnchor) =
 
   // 5. 乱序的 diff 比对
   else {
-    // 旧子节点的开始索引：oldChildrenStart
+    // 旧子节点的开始索引
     const oldStartIndex = i;
-    // 新子节点的开始索引：newChildrenStart
+    // 新子节点的开始索引
     const newStartIndex = i;
     // 5.1 创建一个 <key（新节点的 key）:index（新节点的位置）> 的 Map 对象 keyToNewIndexMap。
     // 通过该对象可知：新的 child（根据 key 判断指定 child） 更新后的位置（根据对应的 index 判断）在哪里
     const keyToNewIndexMap = new Map();
-    // 通过循环为 keyToNewIndexMap 填充值（s2 = newChildrenStart; e2 = newChildrenEnd）
+    // 通过循环为 keyToNewIndexMap 填充值
     for (i = newStartIndex; i <= newChildrenEnd; i++) {
-      // 从 newChildren 中根据开始索引获取每一个 child（c2 = newChildren）
+      // 从 newChildren 中根据开始索引获取每一个 child
       const nextChild = normalizeVNode(newChildren[i]);
       // child 必须存在 key（这也是为什么 v-for 必须要有 key 的原因）
       if (nextChild.key != null) {
@@ -151,7 +151,7 @@ const patchKeyedChildren = (oldChildren, newChildren, container, parentAnchor) =
     let j;
     // 记录已经修复的新节点数量
     let patched = 0;
-    // 新节点待修补的数量 = newChildrenEnd - newChildrenStart + 1
+    // 新节点待修补的数量
     const toBePatched = newChildrenEnd - newStartIndex + 1;
     // 标记位：节点是否需要移动
     let moved = false;
@@ -164,7 +164,7 @@ const patchKeyedChildren = (oldChildren, newChildren, container, parentAnchor) =
     // 即：旧节点下标为 0， 但是记录时会被记录为 1
     // 初始化时，所有的元素为 0
     const newIndexToOldIndexMap = new Array(toBePatched).fill(0);
-    // 遍历 oldChildren（s1 = oldChildrenStart; e1 = oldChildrenEnd），获取旧节点
+    // 遍历 oldChildren，获取旧节点
     for (i = oldStartIndex; i <= oldChildrenEnd; i++) {
       // 获取旧节点
       const prevChild = oldChildren[i];
@@ -202,7 +202,7 @@ const patchKeyedChildren = (oldChildren, newChildren, container, parentAnchor) =
       else {
         // 为 newIndexToOldIndexMap 填充值：下标表示：《新节点的下标（newIndex），不计算已处理的节点。即：n-c 被认为是 0》，
         // 元素表示：《对应旧节点的下标（oldIndex），永远 +1》
-        // 因为 newIndex 包含已处理的节点，所以需要减去 s2（s2 = newChildrenStart）表示：不计算已处理的节点
+        // 因为 newIndex 包含已处理的节点，所以需要减去 newStartIndex 表示：不计算已处理的节点
         newIndexToOldIndexMap[newIndex - newStartIndex] = i + 1;
         // maxNewIndexSoFar 会存储当前最大的 newIndex，它应该是一个递增的，如果没有递增，则证明有节点需要移动
         if (newIndex >= maxNewIndexSoFar) {
@@ -227,7 +227,7 @@ const patchKeyedChildren = (oldChildren, newChildren, container, parentAnchor) =
     j = increasingNewIndexSequence.length - 1;
     // 倒序循环，以便我们可以使用最后修补的节点作为锚点
     for (i = toBePatched - 1; i >= 0; i--) {
-      // nextIndex（需要更新的新节点下标） = newChildrenStart + i
+      // nextIndex（需要更新的新节点下标）
       const nextIndex = newStartIndex + i;
       // 根据 nextIndex 拿到要处理的 新节点
       const nextChild = newChildren[nextIndex];
