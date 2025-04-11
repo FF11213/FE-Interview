@@ -16,4 +16,12 @@ class EventCenter {
     if (!this.handlers[eventName]) return;
     this.handlers[eventName] = this.handlers[eventName].filter((item) => item !== handler);
   }
+
+  once(eventName, handler) {
+    const fn = (...args) => {
+      handler(...args);
+      this.unsubscribe(eventName, fn);
+    };
+    this.subscribe(eventName, fn);
+  }
 }

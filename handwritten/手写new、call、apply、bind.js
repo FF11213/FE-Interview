@@ -7,38 +7,38 @@ function myNew(Fn) {
   return Object(res) === res ? res : obj; // 4.  如果该函数没有返回对象，则返回this。
 }
 
-Function.prototype.myCall = function (context) {
-  if (typeof this !== "function") throw new TypeError("Error"); // 判断调用对象
-  let args = [...arguments].slice(1), // 获取参数
-    result = null;
-  context = context || window; // 判断 context 是否传入，如果未传入则设置为 window
-  context.fn = this; // 将调用函数设为对象的方法
-  result = context.fn(...args); // 调用函数
-  delete context.fn; // 将属性删除
-  return result;
+function simpleNew(obj, ...rest) {
+  const newObj = Object.create(obj.prototype); // 创建一个新对象，原型为构造函数的原型
+  const result = obj.call(newObj, rest); // 调用构造函数，并将新对象作为this
+  return typeof result === "object" && typeof result !== null ? result : newObj; // 如果构造函数返回的是对象，则返回该对象，否则返回新对象
+}
+
+Function.prototype.myCall = function (context, ...args) {
+  if (typeof this !== "function") throw new TypeError("Error"); // 判断调用对象是否为函数
+  context = context || window; // 如果没有提供 context，则默认为全局对象
+  const fn = Symbol("fn"); // 使用 Symbol 创建唯一的属性名，防止属性名冲突
+  context[fn] = this; // 将当前函数绑定到 context 上
+  const res = args.length ? context[fn](...args) : context[fn]();
+  // 调用后删除创建的属性，防止污染 context
+  delete context[fn];
+  return res;
 };
 
-Function.prototype.myApply = function (context) {
+Function.prototype.myApply = function (context, args) {
   if (typeof this !== "function") throw new TypeError("Error"); // 判断调用对象是否为函数
-  let result = null;
-  context = context || window; // 判断 context 是否存在，如果未传入则为 window
-  context.fn = this; // 将函数设为对象的方法
-  // 调用方法
-  if (arguments[1]) {
-    result = context.fn(...arguments[1]);
-  } else {
-    result = context.fn();
-  }
-  delete context.fn; // 将属性删除
-  return result;
+  context = context || window; // 如果没有提供 context，则默认为全局对象
+  const fn = Symbol("fn"); // 使用 Symbol 创建唯一的属性名，防止属性名冲突
+  context[fn] = this; // 将当前函数绑定到 context 上
+  const res = Array.isArray(args) ? context[fn](...args) : context[fn](); // 调用函数
+  delete context[fn]; // 调用后删除创建的属性，防止污染 context
+  return res;
 };
 
-Function.prototype.myBind = function (context) {
+Function.prototype.myBind = function (context, ...bindArgs) {
   if (typeof this !== "function") throw new TypeError("Error"); // 判断调用对象是否为函数
-  let args = [...arguments].slice(1), // 获取参数
-    fn = this;
-  return function Fn() {
+  const fn = this;
+  return function boundFunction(...callArgs) {
     // 根据调用方式，传入不同绑定值
-    return fn.apply(this instanceof Fn ? this : context, args.concat(...arguments));
+    return fn.apply(this instanceof boundFunction ? this : context, [...bindArgs, ...callArgs]);
   };
 };
