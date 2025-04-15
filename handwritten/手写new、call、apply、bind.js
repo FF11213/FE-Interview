@@ -7,9 +7,9 @@ function myNew(Fn) {
   return Object(res) === res ? res : obj; // 4.  如果该函数没有返回对象，则返回this。
 }
 
-function simpleNew(obj, ...rest) {
+function simpleNew(obj, ...args) {
   const newObj = Object.create(obj.prototype); // 创建一个新对象，原型为构造函数的原型
-  const result = obj.call(newObj, rest); // 调用构造函数，并将新对象作为this
+  const result = obj.apply(newObj, args); // 调用构造函数，并将新对象作为this
   return typeof result === "object" && typeof result !== null ? result : newObj; // 如果构造函数返回的是对象，则返回该对象，否则返回新对象
 }
 

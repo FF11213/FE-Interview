@@ -40,12 +40,12 @@ const concurrencyRequest = (urls, maxNum) => {
 
 /* Promise API ES7 实现 */
 async function asyncPool(poolLimit, array, iteratorFn) {
-  const ret = []; // 存储所有的异步任务
+  const allWork = []; // 存储所有的异步任务
   const executing = []; // 存储正在执行的异步任务
   for (const item of array) {
     // 调用iteratorFn函数创建异步任务
     const p = Promise.resolve().then(() => iteratorFn(item, array));
-    ret.push(p); // 保存新的异步任务
+    allWork.push(p); // 保存新的异步任务
 
     // 当poolLimit值小于或等于总任务个数时，进行并发控制
     if (poolLimit <= array.length) {
@@ -58,7 +58,7 @@ async function asyncPool(poolLimit, array, iteratorFn) {
       }
     }
   }
-  return Promise.all(ret);
+  return Promise.all(allWork);
 }
 
 /* Promise API ES6 实现 */

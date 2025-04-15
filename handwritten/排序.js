@@ -34,11 +34,9 @@ const insertSort = (arr) => {
       pre--;
     }
     arr[pre + 1] = cur;
-    console.log(arr);
   }
   return arr;
 };
-// console.log(insertSort(arr));
 
 /**
  * @description: 选择排序
@@ -59,4 +57,47 @@ const selectSort = (arr) => {
   }
   return arr;
 };
-console.log(selectSort(arr));
+
+/**
+ * @description: 快速排序
+ * 时间复杂度: O(nlogn)
+ * 空间复杂度: O(logn)
+ */
+const quickSort = (arr) => {
+  if (arr.length < 2) return arr;
+  const pivotIndex = Math.floor(arr.length / 2);
+  const pivot = arr.splice(pivotIndex, 1)[0];
+  const left = arr.filter((item) => item < pivot);
+  const right = arr.filter((item) => item > pivot);
+  return quickSort(left).concat(pivot, quickSort(right));
+};
+
+/**
+ * @description: 归并排序
+ * 时间复杂度: O(nlogn)
+ * 空间复杂度: O(n)
+ */
+const mergeSort = (arr) => {
+  if (arr.length < 2) return arr;
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+  return merge(left, right);
+};
+const merge = (left, right) => {
+  const result = [];
+  let i = 0;
+  let j = 0;
+  while (i < left.length && j < right.length) {
+    if (left[i] < right[j]) {
+      result.push(left[i]);
+      i++;
+    } else {
+      result.push(right[j]);
+      j++;
+    }
+  }
+  return [...result, ...left.slice(i), ...right.slice(j)];
+};
+
+console.log(quickSort(arr));
