@@ -10,7 +10,7 @@ function myNew(Fn) {
 function simpleNew(obj, ...args) {
   const newObj = Object.create(obj.prototype); // 创建一个新对象，原型为构造函数的原型
   const result = obj.apply(newObj, args); // 调用构造函数，并将新对象作为this
-  return typeof result === "object" && typeof result !== null ? result : newObj; // 如果构造函数返回的是对象，则返回该对象，否则返回新对象
+  return result instanceof Object ? result : newObj; // 如果构造函数返回的是对象，则返回该对象，否则返回新对象
 }
 
 Function.prototype.myCall = function (context, ...args) {
