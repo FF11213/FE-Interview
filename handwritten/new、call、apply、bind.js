@@ -42,3 +42,11 @@ Function.prototype.myBind = function (context, ...bindArgs) {
     return fn.apply(this instanceof boundFunction ? this : context, [...bindArgs, ...callArgs]);
   };
 };
+
+function introduce(greeting, punctuation) {
+  console.log(greeting + ", " + this.name + punctuation);
+}
+const person = {
+  name: "Bob",
+};
+introduce.myCall(person, "Hi", "!"); // 输出: Hi, Bob!
